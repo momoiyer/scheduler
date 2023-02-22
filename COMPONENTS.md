@@ -24,32 +24,52 @@
 
 ### DayList
 
-- State:
+- State: NONE
+
 - Props:
-- Used by:
+  * days:Array an array of objects (each object represents a day and includes an id, name, and spots)
+  * day:String the currently selected day
+  * setDay:Function sets the currently selected day and accepts the name of the day eg. "Monday", "Tuesday"
+
+- Used by: Application
 
 ### DayListItem
 
-- State:
+- State: NONE
+
 - Props:
-- Used by:
+  * name:String the name of the day
+  * spots:Number the number of spots remaining
+  * selected:Boolean true or false declaring that this day is selected
+  * setDay:Function accepts the name of the day eg. "Monday", "Tuesday"
+
+- Used by: DayList
 
 ### InterviewerList
 
-- State:
+- State: NONE
+
 - Props: 
   * id:number - the id of the interviewer
   * name:string - the name of the interviewer
   * avatar:url - a url to an image of the interviewer
   * elected:boolean - determines if an interviewer is selected or not and displays the name and applies appropriate styles if selected
   * setInterviewer:function - is run when the <InterviewerListItem> is clicked. This function receives the interviewer's id as an argument. It sets the selected interviewer.
-- Used by:
+
+- Used by: Application
 
 ### InterviewerListItem
 
-- State:
+- State: NONE
+
 - Props:
-- Used by:
+  * id:number - the id of the interviewer
+  * name:string - the name of the interviewer
+  * avatar:url - a url to an image of the interviewer
+  * selected:boolean - determines if an interviewer is selected or not and displays the name and applies appropriate styles if selected.
+  * setInterviewer:function - is run when the <InterviewerListItem> is clicked. This function receives the interviewer's id as an argument. It sets the selected interviewer.
+
+- Used by: InterviewerList
 
 ### Appointment
 
