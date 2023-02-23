@@ -79,42 +79,75 @@
 
 ### Appointment/Header
 
-- State:
-- Props:
-- Used by:
+- State: NONE
+
+- Props: 
+  * time:String - the time of the appointment (e.g "12pm")
+  
+- Used by: Appointment
 
 ### Appointment/Empty
 
-- State:
+- State: NONE
+
 - Props:
-- Used by:
+  * onAdd:Function - It should be called when the user clicks the Add button.
+
+- Used by: Appointment
 
 ### Appointment/Show
 
-- State:
+- State: NONE
+
 - Props:
-- Used by:
+  * student:String eg. "Lydia Miller-Jones"
+  * interviewer:Object we can use the interview object that already exists in stories/index.js for this
+  * onEdit:Function to be called when the user clicks the Edit button
+  * onDelete:Function to be called when the user clicks the Delete button
+
+- Used by: Appointment
 
 ### Appointment/Form
 
 - State:
+  * student:String
+  * interviewer:Number
+
 - Props:
+  * student:String
+  * interviewers:Array
+  * interviewer:Number
+  * onSave:Function
+  * onCancel:Function
+
 - Used by:
 
 ### Appointment/Status
 
-- State:
+- State: NONE
+
 - Props:
-- Used by:
+  * message:String eg. "Deleting"
+
+- Used by: Appointment
 
 ### Appointment/Error
 
-- State:
+- State: NONE
+
 - Props:
-- Used by:
+  * message:String eg. "Could not delete appointment."
+  * onClose:Function to be called when the user clicks the Close button
+
+- Used by: Appointment
 
 ### Appointment/Confirm
 
-- State:
+- State: NONE
+
 - Props:
-- Used by:
+  * message:String eg. "Delete the appointment?"
+  * onConfirm:Function to be called when the user clicks the Confirm button
+  * onCancel:Function to be called when the user clicks the Cancel button
+
+- Used by: Appointment
