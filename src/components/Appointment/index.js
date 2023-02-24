@@ -11,6 +11,7 @@ export default function Appointment(props) {
       <Header time={time} />
       {interview &&
         <Show
+          key={id}
           student={interview.student}
           interviewer={interview.interviewer.name}
         />}
