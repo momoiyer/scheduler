@@ -6,7 +6,7 @@ import "components/Application.scss";
 import DayList from "./DayList";
 import "components/Appointment";
 import Appointment from "components/Appointment";
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 export default function Application(props) {
   const [state, setState] = useState({ day: "Monday", days: [], appointments: {}, interviewers: {} });
@@ -14,6 +14,7 @@ export default function Application(props) {
   const setDay = day => setState(prev => ({ ...prev, day }));
 
   const dailyAppointments = getAppointmentsForDay({ days: state.days, appointments: state.appointments }, state.day);
+  const dailyInterviewers = getInterviewersForDay({ days: state.days, interviewers: state.interviewers }, state.day);
 
   useEffect(() => {
     const getDays = Axios.get('/api/days');
@@ -37,6 +38,7 @@ export default function Application(props) {
         id={appointment.id}
         time={appointment.time}
         interview={interview}
+        interviewers={dailyInterviewers}
       />
     );
   });

@@ -7,7 +7,7 @@ import Form from 'components/Appointment/Form.js';
 import useVisualMode from 'hooks/useVisualMode';
 
 export default function Appointment(props) {
-  const { id, time, interview } = props;
+  const { id, time, interview, interviewers } = props;
 
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
@@ -38,7 +38,7 @@ export default function Appointment(props) {
         <Form
           student=""
           interviewer={3}
-          interviewers={[]}
+          interviewers={interviewers}
           onSave={() => transition(CONFIRM)}
           onCancel={back}
         />

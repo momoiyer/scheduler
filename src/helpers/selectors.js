@@ -22,3 +22,18 @@ export function getInterview(state, interview) {
   const result = { student: interview.student, interviewer };
   return result;
 }
+
+export function getInterviewersForDay(state, day) {
+  const filteredDay = state.days
+    .filter(currentDay => currentDay.name === day)[0];
+
+  if (!filteredDay) {
+    return [];
+  }
+
+  const filteredInterviewers = filteredDay.interviewers
+    .map(availableInterviewer => Object.values(state.interviewers)
+      .filter(interviewer => interviewer.id === availableInterviewer)[0]);
+
+  return filteredInterviewers;
+}
