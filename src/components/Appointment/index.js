@@ -13,7 +13,6 @@ export default function Appointment(props) {
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const CONFIRM = "CONFIRM";
-  const CANCEL = "CANCEL";
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
