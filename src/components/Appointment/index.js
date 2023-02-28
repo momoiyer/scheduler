@@ -5,17 +5,22 @@ import Empty from 'components/Appointment/Empty.js';
 import Show from 'components/Appointment/Show.js';
 import Form from 'components/Appointment/Form.js';
 import useVisualMode from 'hooks/useVisualMode';
+import Status from "./Status";
+import Confirm from "./Confirm";
 
 export default function Appointment(props) {
-  const { id, time, interview, interviewers, bookInterview } = props;
+  const { id, time, interview, interviewers, bookInterview, cancelInterview } = props;
 
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
+  const SAVING = "SAVING";
   const CONFIRM = "CONFIRM";
+  const DELETING = "DELETING";
+  const EDIT = "EDIT";
 
   const { mode, transition, back } = useVisualMode(
-    props.interview ? SHOW : EMPTY
+    interview ? SHOW : EMPTY
   );
 
   const save = (name, interviewer) => {
@@ -24,9 +29,25 @@ export default function Appointment(props) {
       interviewer
     };
 
-    bookInterview(id, interview);
+    transition(SAVING);
+    bookInterview(id, interview)
+      .then((result) => {
+        if (result) {
+          transition(SHOW);
+        }
+      })
+      .catch(err => console.log(err));;
+  };
 
-    transition(SHOW);
+  const cancel = () => {
+    transition(DELETING);
+    cancelInterview(id)
+      .then(result => {
+        if (result) {
+          transition(EMPTY);
+        }
+      })
+      .catch(err => console.log(err));
   };
 
   return (
@@ -42,15 +63,43 @@ export default function Appointment(props) {
           key={id}
           student={interview.student}
           interviewer={interview.interviewer.name}
+          onDelete={() => transition(CONFIRM)}
+          onEdit={() => transition(EDIT)}
         />
       )}
       {mode === CREATE && (
         <Form
           student=""
-          interviewer={3}
+          interviewer={1}
           interviewers={interviewers}
           onSave={save}
           onCancel={back}
+        />
+      )}
+      {mode === EDIT && (
+        <Form
+          student={interview.student}
+          interviewer={interview.interviewer.id}
+          interviewers={interviewers}
+          onSave={save}
+          onCancel={back}
+        />
+      )}
+      {mode === SAVING && (
+        <Status
+          message="Saving..."
+        />
+      )}
+      {mode === CONFIRM && (
+        <Confirm
+          message="Are you sure you want to cancel the appointment?"
+          onCancel={back}
+          onConfirm={cancel}
+        />
+      )}
+      {mode === DELETING && (
+        <Status
+          message="Deleting..."
         />
       )}
     </article>
