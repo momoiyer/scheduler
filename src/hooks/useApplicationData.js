@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import { getAppointmentsForDay } from "helpers/selectors";
 
 const useApplicationData = () => {
   const [state, setState] = useState({ day: "Monday", days: [], appointments: {}, interviewers: {} });
@@ -11,15 +12,19 @@ const useApplicationData = () => {
       ...state.appointments[id],
       interview: { ...interview }
     };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
+
 
     return Axios.put(`/api/appointments/${id}`, appointment)
       .then((result) => {
         if (result.status === 204) {
-          setState(prev => ({ ...prev, appointments }));
+
+          const appointments = {
+            ...state.appointments,
+            [id]: appointment
+          };
+
+          const days = updateSpots(appointments);
+          setState(prev => ({ ...prev, appointments, days }));
         }
       })
       .catch(error => {
@@ -29,25 +34,40 @@ const useApplicationData = () => {
   };
 
   const cancelInterview = (id) => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
     return Axios.delete(`/api/appointments/${id}`)
       .then((result) => {
         if (result.status === 204) {
-          setState(prev => ({ ...prev, appointments }));
+
+          const appointment = {
+            ...state.appointments[id],
+            interview: null
+          };
+          const appointments = {
+            ...state.appointments,
+            [id]: appointment
+          };
+
+          const days = updateSpots(appointments);
+
+          setState(prev => ({ ...prev, appointments, days }));
         }
       })
       .catch(error => {
         console.log("error: ", error);
         throw new Error(error);
       });
+  };
+
+  const updateSpots = (appointments) => {
+    let days = [...state.days];
+    const dailyAppointments = getAppointmentsForDay({ ...state, appointments }, state.day);
+    const avaliableSpots = Object.values(dailyAppointments).filter(appointment => !appointment.interview);
+    days.forEach(day => {
+      if (day.name === state.day) {
+        day.spots = avaliableSpots.length;
+      }
+    });
+    return days;
   };
 
   useEffect(() => {

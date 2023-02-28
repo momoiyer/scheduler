@@ -8,7 +8,6 @@ import useVisualMode from 'hooks/useVisualMode';
 import Status from "./Status";
 import Confirm from "./Confirm";
 import Error from "./Error";
-import { TRUE } from "sass";
 
 export default function Appointment(props) {
   const { id, time, interview, interviewers, bookInterview, cancelInterview } = props;
@@ -18,7 +17,7 @@ export default function Appointment(props) {
   const CREATE = "CREATE";
   const SAVING = "SAVING";
   const CONFIRM = "CONFIRM";
-  const DELETING = "DELETING";
+  const DELETE = "DELETE";
   const EDIT = "EDIT";
   const ERROR_SAVE = "ERROR_SAVE ";
   const ERROR_DELETE = "ERROR_DELETE  ";
@@ -43,7 +42,7 @@ export default function Appointment(props) {
   };
 
   const cancel = () => {
-    transition(DELETING, true);
+    transition(DELETE, true);
     cancelInterview(id)
       .then(() => transition(EMPTY))
       .catch(error => {
@@ -99,7 +98,7 @@ export default function Appointment(props) {
           onConfirm={cancel}
         />
       )}
-      {mode === DELETING && (
+      {mode === DELETE && (
         <Status
           message="Deleting..."
         />
@@ -107,7 +106,7 @@ export default function Appointment(props) {
       {mode === ERROR_SAVE && (
         <Error
           message="Error Saving Appointment!"
-          onClose={() => transition(CREATE)}
+          onClose={back}
         />
       )}
       {mode === ERROR_DELETE && (
