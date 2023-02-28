@@ -59,15 +59,24 @@ const useApplicationData = () => {
   };
 
   const updateSpots = (appointments) => {
-    let days = [...state.days];
+    //get appointments for current day
     const dailyAppointments = getAppointmentsForDay({ ...state, appointments }, state.day);
+
+    //calculate avalialbe spots from today's appointments
     const avaliableSpots = Object.values(dailyAppointments).filter(appointment => !appointment.interview);
-    days.forEach(day => {
-      if (day.name === state.day) {
-        day.spots = avaliableSpots.length;
-      }
-    });
-    return days;
+    const spots = avaliableSpots.length;
+
+    //create new day object with updated spots
+    const currentDay = state.days.find((day) => day.name === state.day);
+    const newCurrentDay = { ...currentDay, spots };
+
+    //update days value by replacing current day with new current day object (without mutating state.days.day.spots)
+    const updatedDays = [...state.days];
+    const currentDayIndex = updatedDays.findIndex((day) => day.name === state.day);
+    updatedDays[currentDayIndex] = newCurrentDay;
+
+    // return an updated days array
+    return updatedDays;
   };
 
   useEffect(() => {
