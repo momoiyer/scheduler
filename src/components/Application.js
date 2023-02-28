@@ -1,79 +1,17 @@
-import React, { useState, useEffect } from "react";
-import Axios from "axios";
-
+import React from "react";
 import "components/Application.scss";
-
-import DayList from "./DayList";
 import "components/Appointment";
+import DayList from "./DayList";
 import Appointment from "components/Appointment";
 import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
+import useApplicationData from '../hooks/useApplicationData.js';
 
 export default function Application(props) {
-  const [state, setState] = useState({ day: "Monday", days: [], appointments: {}, interviewers: {} });
+  const { state, setDay, bookInterview, cancelInterview } = useApplicationData();
 
-  const setDay = day => setState(prev => ({ ...prev, day }));
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
 
-  const dailyAppointments = getAppointmentsForDay({ days: state.days, appointments: state.appointments }, state.day);
-  const dailyInterviewers = getInterviewersForDay({ days: state.days, interviewers: state.interviewers }, state.day);
-
-  useEffect(() => {
-    const getDays = Axios.get('/api/days');
-    const getAppointments = Axios.get('/api/appointments');
-    const getInterviewers = Axios.get('/api/interviewers');
-
-    Promise.all([getDays, getAppointments, getInterviewers])
-      .then(results => {
-        const daysResult = results[0].data;
-        const appointmentsResult = results[1].data;
-        const interviewersResult = results[2].data;
-        setState(prev => ({ ...prev, days: daysResult, appointments: appointmentsResult, interviewers: interviewersResult }));
-      });
-  }, []);
-
-  const bookInterview = (id, interview) => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview }
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    return Axios.put(`/api/appointments/${id}`, appointment)
-      .then((result) => {
-        if (result.status === 204) {
-          setState(prev => ({ ...prev, appointments }));
-          return true;
-        }
-      })
-      .catch(error => {
-        console.log("error: ", error);
-      });
-  };
-
-  const cancelInterview = (id) => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    return Axios.delete(`/api/appointments/${id}`)
-      .then((result) => {
-        if (result.status === 204) {
-          // setState(prev => ({ ...prev, appointments }));
-          return true;
-        }
-      })
-      .catch(error => {
-        console.log("error: ", error);
-        return error.message;
-      });
-  };
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
 
   const schedules = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
