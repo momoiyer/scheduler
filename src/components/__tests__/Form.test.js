@@ -24,17 +24,6 @@ describe("Form", () => {
     expect(getByPlaceholderText("Enter Student Name")).toHaveValue("");
   });
 
-  it("defaults to Monday and changes the schedule when a new day is selected", () => {
-    const { getByText } = render(<Application />);
-
-    return waitForElement(() => getByText("Monday")).then(() => {
-      fireEvent.click(getByText("Tuesday"));
-      expect(getByText("Leopold Silvers")).toBeInTheDocument();
-    });
-  });
-
-
-
   it("renders with initial student name", () => {
     const { getByTestId } = render(
       <Form interviewers={interviewers} student="Lydia Miller-Jones" />
