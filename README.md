@@ -6,7 +6,7 @@ Interview Scheduler is a web app built using React
 
 !["Scheduler Home Page with calender view of appointment details for the week"](./docs/Home.jpg)
 
-!["Add New Appointment Screen"](./docs/AddAppointment.jpg)
+!["Add New Appointment Screen"](./docs/MakeAppointment.jpg)
 
 !["Delete appointment Confirmation screen"](./docs/DeleteAppointment.jpg)
 
